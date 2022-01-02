@@ -17,14 +17,17 @@ for file in files:
         # TODO: put a condition to make a dedicated logic for images and movies
         image = None
         image = Image.open(file)
-        hash = imagehash.phash(image, hash_size=128)
+        # Set hash_size 128 (default: 8) to find out even minor differences.
         # https://pillow.readthedocs.io/en/stable/reference/Image.html#functions
+        hash = imagehash.phash(image, hash_size=128)
         print(file)
         new_file_name = '%s' % hash + os.path.splitext(file)[1]
 
         date_object = {}
 
         exif = image._getexif()
+        # If the file has exif the "DateTimeOriginal" on it will be used for a dest directory name
+        # instead of ctime.
         if exif != None:
             exif_table = {}
             for tag_id, value in exif.items():
@@ -61,6 +64,6 @@ for file in files:
     except NameError:
         print("name error")
         continue
-    except: # If formats is not None, a list or a tuple.
+    except:
         print(sys.exc_info()[0])
         continue
