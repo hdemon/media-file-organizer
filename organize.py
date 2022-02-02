@@ -19,10 +19,9 @@ for file in files:
         image = Image.open(file)
         # Set hash_size 128 (default: 8) to find out even minor differences.
         # https://pillow.readthedocs.io/en/stable/reference/Image.html#functions
-        hash = imagehash.phash(image, hash_size=128)
+        hash = imagehash.phash(image, hash_size=16)
         print(file)
-        new_file_name = '%s' % hash + os.path.splitext(file)[1]
-
+        new_file_name = ('%s' % hash) + '.' + os.path.basename(file)
         date_object = {}
 
         exif = image._getexif()
@@ -42,7 +41,7 @@ for file in files:
             date_object = datetime.fromtimestamp(unixtime_float)
 
         new_dest_directory = dest_root_path + '/' + datetime.strftime(date_object, '%Y-%m-%d')
-        new_dest_file = new_dest_directory + '/' + os.path.basename(file)
+        new_dest_file = new_dest_directory + '/' + new_file_name
         print(new_dest_file)
 
         if not os.path.isdir(new_dest_directory):
